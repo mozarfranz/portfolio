@@ -1,0 +1,60 @@
+---
+// Inline SVG icons from two free libraries, rendered at build time:
+//   set="ui"    -> Lucide (ISC), 24px stroke icons
+//   set="brand" -> Simple Icons (CC0), 24px filled brand marks
+import { readFileSync } from 'node:fs';
+import * as brands from 'simple-icons';
+
+interface Props {
+  name: string;
+  set?: 'ui' | 'brand';
+  size?: number;
+  class?: string;
+  /** Stroke width for Lucide icons. */
+  stroke?: number;
+}
+
+const { name, set = 'ui', size = 20, class: className, stroke = 1.75 } = Astro.props;
+
+let body = '';
+if (set === 'ui') {
+  const file = new URL(`../../node_modules/lucide-static/icons/${name}.svg`, import.meta.url);
+  const raw = readFileSync(file, 'utf8');
+  body = raw.slice(raw.indexOf('>', raw.indexOf('<svg')) + 1, raw.lastIndexOf('</svg>')).trim();
+} else {
+  const key = 'si' + name.charAt(0).toUpperCase() + name.slice(1);
+  const icon = (brands as Record<string, { path: string } | undefined>)[key];
+  if (!icon) throw new Error(`Unknown brand icon: ${name}`);
+  body = `<path d="${icon.path}" />`;
+}
+---
+
+{
+  set === 'ui' ? (
+    <svg
+      class:list={['icon', className]}
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width={stroke}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      set:html={body}
+    />
+  ) : (
+    <svg
+      class:list={['icon', className]}
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      set:html={body}
+    />
+  )
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Swatch Deck sketch</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:#e9ebee;font-family:"Arial Narrow",Arial,sans-serif;color:#15161a;position:relative}
+nav{position:absolute;top:32px;left:48px;right:48px;display:flex;justify-content:space-between;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.deck{position:absolute;left:120px;bottom:-40px;width:0;height:0}
+.chip{position:absolute;left:-60px;bottom:0;width:150px;height:640px;border-radius:10px;transform-origin:75px 590px;box-shadow:0 2px 0 rgba(0,0,0,.15),0 18px 30px rgba(0,0,0,.18);background:#fff;padding:0;overflow:hidden}
+.chip .c{height:430px}
+.chip p{padding:12px;font-size:13px;line-height:1.3}
+.chip b{display:block;font-size:22px;letter-spacing:-.01em}
+.rivet{position:absolute;left:-12px;bottom:28px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#f3d27a,#9b7417);z-index:20}
+.open{position:absolute;right:64px;top:120px;width:620px;height:700px;background:#fff;border-radius:12px;box-shadow:0 30px 60px rgba(0,0,0,.18);padding:48px}
+h1{font-size:76px;line-height:.95;letter-spacing:-.03em;font-weight:900}
+.sub{margin-top:20px;font-size:20px;max-width:460px}
+form{margin-top:36px;display:grid;gap:12px}
+input,textarea{border:2px solid #15161a;border-radius:6px;padding:14px;font-size:16px;font-family:inherit}
+.tog{display:flex;gap:8px}.tog span{flex:1;border:2px solid #15161a;border-radius:999px;padding:10px;text-align:center;font-size:15px}
+.tog span.on{background:#15161a;color:#fff}
+button{background:#ff5a1f;border:0;border-radius:6px;padding:18px;font-size:20px;font-weight:800;color:#15161a}
+.no{position:absolute;right:64px;top:84px;font-size:13px;letter-spacing:.1em}
+</style></head><body>
+<nav><span>[Your Name] — Web Developer</span><span>Work · Services · Enquire</span></nav>
+<div class="deck">
+  <div class="chip" style="transform:rotate(-6deg)"><div class="c" style="background:#0f8a5f"></div><p><b>Client 01</b>Shopify · No. 01</p></div>
+  <div class="chip" style="transform:rotate(6deg)"><div class="c" style="background:#ffc400"></div><p><b>Client 02</b>WordPress · No. 02</p></div>
+  <div class="chip" style="transform:rotate(18deg)"><div class="c" style="background:#1f4fff"></div><p><b>Client 03</b>WordPress · No. 03</p></div>
+  <div class="chip" style="transform:rotate(30deg)"><div class="c" style="background:#d81e5b"></div><p><b>Client 04</b>Shopify · No. 04</p></div>
+  <div class="chip" style="transform:rotate(42deg)"><div class="c" style="background:#ff5a1f"></div><p><b>Client 05</b>Shopify · No. 05</p></div>
+  <div class="rivet"></div>
+</div>
+<div class="no">CHIP NO. 00 — YOUR BUSINESS</div>
+<div class="open">
+  <h1>WordPress &amp; Shopify sites, built to order.</h1>
+  <p class="sub">Pick a chip to see a live site I built. Then tell me about yours.</p>
+  <form><div class="tog"><span class="on">WordPress</span><span>Shopify</span><span>Not sure</span></div>
+  <input placeholder="Your name"><input placeholder="Email"><textarea rows="3" placeholder="What do you need?"></textarea>
+  <button type="button">Send enquiry</button></form>
+</div>
+</body></html>

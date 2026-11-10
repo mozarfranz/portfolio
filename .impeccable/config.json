@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-10-29T14:17:47.925Z",
+        "reason": "user requested subtle grids in chat (2026-10-29: 'add a lot of subtle grids')"
+      }
+    ]
+  }
+}

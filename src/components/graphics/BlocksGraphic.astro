@@ -1,0 +1,276 @@
+---
+// WordPress panel graphic: a block editor assembling a page. Blocks slide in
+// one after another and each is selected in turn with its own outline, while
+// the sidebar settings follow along. Loops every 7s. Fills its column.
+---
+
+<svg class="blocks" viewBox="0 0 480 170" fill="none" aria-hidden="true">
+  <!-- editor window -->
+  <rect class="frame" x="0.5" y="0.5" width="479" height="169" rx="8" />
+  <path class="frame-line" d="M0.5 24.5h479M372.5 24.5v145" />
+  <circle class="dot" cx="14" cy="12.5" r="2.5" />
+  <circle class="dot" cx="23" cy="12.5" r="2.5" />
+  <circle class="dot" cx="32" cy="12.5" r="2.5" />
+  <rect class="toolbar" x="150" y="8" width="180" height="9" rx="4.5" />
+
+  <!-- blocks arriving in order, each with its own selection outline -->
+  <g class="block b1">
+    <rect class="block-box" x="16" y="38" width="340" height="26" rx="4" />
+    <rect class="ink" x="26" y="46" width="150" height="10" rx="2" />
+    <rect class="outline o1" x="14" y="36" width="344" height="30" rx="5" />
+  </g>
+
+  <g class="block b2">
+    <rect class="block-box" x="16" y="72" width="340" height="54" rx="4" />
+    <rect class="media" x="24" y="79" width="100" height="40" rx="3" />
+    <path class="mount" d="M30 114l18-17 12 12 10-8 20 13" />
+    <circle class="sun" cx="108" cy="90" r="5" />
+    <rect class="text" x="136" y="84" width="200" height="6" rx="3" />
+    <rect class="text" x="136" y="96" width="170" height="6" rx="3" />
+    <rect class="text" x="136" y="108" width="186" height="6" rx="3" />
+    <rect class="outline o2" x="14" y="70" width="344" height="58" rx="5" />
+  </g>
+
+  <g class="block b3">
+    <rect class="block-box" x="16" y="134" width="150" height="26" rx="4" />
+    <rect class="btn" x="26" y="140" width="72" height="14" rx="3" />
+    <rect class="outline o3" x="14" y="132" width="154" height="30" rx="5" />
+  </g>
+
+  <!-- add-block button -->
+  <g class="add">
+    <circle class="add-ring" cx="340" cy="147" r="9" />
+    <path class="add-plus" d="M340 142.5v9M335.5 147h9" />
+  </g>
+
+  <!-- settings sidebar, reacting to the selected block -->
+  <rect class="side-line" x="386" y="38" width="56" height="5" rx="2.5" />
+  <rect class="side-line" x="386" y="52" width="78" height="5" rx="2.5" />
+  <rect class="side-line" x="386" y="66" width="46" height="5" rx="2.5" />
+  <rect class="side-field" x="386" y="84" width="80" height="16" rx="4" />
+  <rect class="side-fill" x="390" y="89" width="40" height="6" rx="3" />
+  <rect class="side-toggle" x="386" y="112" width="26" height="12" rx="6" />
+  <circle class="side-knob" cx="392" cy="118" r="4" />
+  <rect class="side-line" x="420" y="115.5" width="44" height="5" rx="2.5" />
+</svg>
+
+<style>
+  .blocks {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 1.75rem;
+  }
+
+  .frame {
+    stroke: var(--line-strong);
+    fill: rgba(10, 11, 13, 0.6);
+  }
+
+  .frame-line {
+    stroke: var(--line-strong);
+  }
+
+  .dot {
+    fill: var(--line-strong);
+  }
+
+  .toolbar {
+    fill: rgba(255, 255, 255, 0.04);
+  }
+
+  .block-box {
+    fill: var(--bg-panel);
+    stroke: var(--line);
+  }
+
+  .ink {
+    fill: var(--text);
+  }
+
+  .media {
+    fill: rgba(88, 120, 255, 0.18);
+  }
+
+  .mount {
+    stroke: rgba(140, 165, 255, 0.85);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .sun {
+    fill: rgba(140, 165, 255, 0.6);
+  }
+
+  .text {
+    fill: var(--line-strong);
+  }
+
+  .btn {
+    fill: var(--accent);
+  }
+
+  .side-line {
+    fill: var(--line-strong);
+  }
+
+  .side-field {
+    fill: var(--bg-panel);
+    stroke: var(--line);
+  }
+
+  .side-fill {
+    fill: var(--text-faint);
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: side-fill 7s var(--ease-out) infinite;
+  }
+
+  .side-toggle {
+    fill: rgba(61, 220, 151, 0.25);
+  }
+
+  .side-knob {
+    fill: var(--accent);
+    animation: knob 7s var(--ease-out) infinite;
+  }
+
+  /* blocks slide in one after another and stay until the loop resets */
+  .block {
+    animation: block-in 7s var(--ease-out) infinite;
+  }
+
+  .b2 {
+    animation-delay: 0.5s;
+  }
+
+  .b3 {
+    animation-delay: 1s;
+  }
+
+  @keyframes block-in {
+    0% {
+      opacity: 0;
+      translate: 18px 0;
+    }
+    7%,
+    90% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    100% {
+      opacity: 0;
+      translate: 0 0;
+    }
+  }
+
+  /* each block's own outline lights up in turn */
+  .outline {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    opacity: 0;
+    animation: select 7s var(--ease-out) infinite;
+  }
+
+  .o1 {
+    animation-name: select-1;
+  }
+
+  .o2 {
+    animation-name: select-2;
+  }
+
+  .o3 {
+    animation-name: select-3;
+  }
+
+  @keyframes select-1 {
+    0%,
+    20% { opacity: 0; }
+    24%,
+    40% { opacity: 1; }
+    44%,
+    100% { opacity: 0; }
+  }
+
+  @keyframes select-2 {
+    0%,
+    37% { opacity: 0; }
+    41%,
+    57% { opacity: 1; }
+    61%,
+    100% { opacity: 0; }
+  }
+
+  @keyframes select-3 {
+    0%,
+    54% { opacity: 0; }
+    58%,
+    80% { opacity: 1; }
+    84%,
+    100% { opacity: 0; }
+  }
+
+  @keyframes side-fill {
+    0%,
+    24% { scale: 0.4 1; }
+    30%,
+    41% { scale: 1 1; }
+    47%,
+    58% { scale: 0.7 1; }
+    64%,
+    100% { scale: 1.6 1; }
+  }
+
+  @keyframes knob {
+    0%,
+    58% { translate: 0 0; }
+    64%,
+    100% { translate: 14px 0; }
+  }
+
+  .add {
+    transform-box: view-box;
+    transform-origin: 340px 147px;
+    animation: add 7s ease-in-out infinite;
+  }
+
+  .add-ring {
+    fill: var(--bg);
+    stroke: var(--accent);
+    stroke-width: 1.25;
+  }
+
+  .add-plus {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  @keyframes add {
+    0%,
+    10%,
+    100% {
+      scale: 1;
+      opacity: 0.7;
+    }
+    16% {
+      scale: 1.2;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .block,
+    .outline,
+    .side-fill,
+    .side-knob,
+    .add {
+      animation: none;
+    }
+
+    .o2 {
+      opacity: 1;
+    }
+  }
+</style>

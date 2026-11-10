@@ -1,0 +1,262 @@
+---
+import { site } from '../data/site';
+---
+
+<form class="enquiry" action={site.formEndpoint} method="POST" novalidate data-enquiry>
+  <fieldset class="platform">
+    <legend>Platform</legend>
+    <div class="platform-options">
+      <label><input type="radio" name="platform" value="WordPress" checked /><span>WordPress</span></label>
+      <label><input type="radio" name="platform" value="Shopify" /><span>Shopify</span></label>
+      <label><input type="radio" name="platform" value="Not sure" /><span>Not sure</span></label>
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <label for="enq-name">Your name</label>
+    <input id="enq-name" name="name" type="text" autocomplete="name" required />
+    <p class="error" data-error-for="enq-name">Add your name so I know who to reply to.</p>
+  </div>
+
+  <div class="field">
+    <label for="enq-email">Email</label>
+    <input id="enq-email" name="email" type="email" autocomplete="email" required />
+    <p class="error" data-error-for="enq-email">Enter an email address like name@business.com.</p>
+  </div>
+
+  <div class="field">
+    <label for="enq-msg">What do you need?</label>
+    <textarea id="enq-msg" name="message" rows="3" required placeholder="A new store, a rebuild, a fix…"></textarea>
+    <p class="error" data-error-for="enq-msg">A sentence or two about the project is enough.</p>
+  </div>
+
+  <button type="submit" class="send btn btn-primary btn-lg">
+    <span class="send-label" data-label>Send enquiry</span>
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+      <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" />
+    </svg>
+  </button>
+  <p class="status" role="status" aria-live="polite" data-status></p>
+</form>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-enquiry]');
+
+  forms.forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const label = form.querySelector<HTMLElement>('[data-label]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const fields = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]');
+
+    const check = (el: HTMLInputElement | HTMLTextAreaElement) => {
+      const ok = el.value.trim() !== '' && el.checkValidity();
+      el.setAttribute('aria-invalid', String(!ok));
+      const err = form.querySelector<HTMLElement>(`[data-error-for="${el.id}"]`);
+      if (err) {
+        err.id = `${el.id}-error`;
+        el.setAttribute('aria-describedby', err.id);
+        err.hidden = ok;
+      }
+      return ok;
+    };
+
+    fields.forEach((el) => {
+      const err = form.querySelector<HTMLElement>(`[data-error-for="${el.id}"]`);
+      if (err) err.hidden = true;
+      el.addEventListener('blur', () => el.value && check(el));
+      el.addEventListener('input', () => el.getAttribute('aria-invalid') === 'true' && check(el));
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const results = Array.from(fields).map(check);
+      if (results.includes(false)) {
+        const first = Array.from(fields).find((el) => el.getAttribute('aria-invalid') === 'true');
+        first?.focus();
+        return;
+      }
+
+      button.disabled = true;
+      form.dataset.state = 'sending';
+      label.textContent = 'Sending…';
+      status.textContent = '';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.dataset.state = 'sent';
+        form.reset();
+        label.textContent = 'Enquiry sent';
+        status.textContent = "Thanks. Your enquiry is in, and I'll reply by email.";
+      } catch {
+        form.dataset.state = 'error';
+        label.textContent = 'Send enquiry';
+        status.textContent = "That didn't send. Check your connection and try again.";
+      } finally {
+        if (form.dataset.state !== 'sent') button.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  .enquiry {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .platform {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .platform legend,
+  .field label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin-bottom: 0.45rem;
+    display: block;
+    padding: 0;
+  }
+
+  .platform-options {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .platform-options label {
+    flex: 1;
+    position: relative;
+  }
+
+  .platform-options input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .platform-options span {
+    display: block;
+    text-align: center;
+    padding: 0.6rem 0.4rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.94rem;
+    color: var(--text-soft);
+    transition:
+      background-color 160ms var(--ease-out),
+      border-color 160ms var(--ease-out),
+      color 160ms var(--ease-out);
+  }
+
+  .platform-options label:hover span {
+    border-color: var(--text-faint);
+    color: var(--text);
+  }
+
+  .platform-options input:checked + span {
+    border-color: var(--accent);
+    color: var(--text);
+    background: rgba(61, 220, 151, 0.08);
+  }
+
+  .platform-options input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .field {
+    display: grid;
+  }
+
+  .field input,
+  .field textarea {
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    padding: 0.7rem 0.85rem;
+    resize: vertical;
+    transition: border-color 160ms var(--ease-out);
+  }
+
+  .field input:hover,
+  .field textarea:hover {
+    border-color: var(--text-faint);
+  }
+
+  .field textarea::placeholder {
+    color: var(--text-faint);
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(61, 220, 151, 0.18);
+  }
+
+  .field [aria-invalid='true'],
+  .field [aria-invalid='true']:hover {
+    border-color: var(--danger);
+  }
+
+  .field [aria-invalid='true']:focus-visible {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(255, 122, 122, 0.2);
+  }
+
+  .error {
+    color: var(--danger);
+    font-size: 0.88rem;
+    margin-top: 0.35rem;
+  }
+
+  .send {
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+
+  .send:disabled {
+    cursor: progress;
+    opacity: 0.75;
+    translate: none;
+    animation: none;
+  }
+
+  .enquiry[data-state='sent'] .send {
+    background: var(--bg-panel);
+    color: var(--text);
+    box-shadow: 0 0 0 1px var(--line-strong);
+    cursor: default;
+    animation: none;
+  }
+
+  .enquiry[data-state='sent'] .send::after,
+  .enquiry[data-state='sent'] .send svg {
+    display: none;
+  }
+  .status:empty {
+    display: none;
+  }
+
+  .status {
+    font-size: 0.95rem;
+    color: var(--accent);
+  }
+
+  .enquiry[data-state='error'] .status {
+    color: var(--danger);
+  }
+</style>

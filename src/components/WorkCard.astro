@@ -1,0 +1,317 @@
+---
+import type { Listing } from '../data/listings';
+import Icon from './Icon.astro';
+import SamplePreview from './SamplePreview.astro';
+
+interface Props {
+  listing: Listing;
+  large?: boolean;
+}
+
+const { listing, large = false } = Astro.props;
+const { swatch } = listing;
+const brandIcon = { Shopify: 'shopify', WordPress: 'wordpress', 'Next.js': 'nextdotjs' } as const;
+const Tag = listing.sample ? 'div' : 'a';
+const linkProps = listing.sample ? {} : { href: listing.url, target: '_blank', rel: 'noopener' };
+---
+
+<article class:list={['work', { large }]}>
+  <Tag class="frame" {...linkProps}>
+    <div class="shot" style={`--g:${swatch.ground};--i:${swatch.ink};--a:${swatch.accent}`}>
+      {
+        listing.image ? (
+          <img src={listing.image} alt={`Homepage of ${listing.name}`} width="1280" height="800" loading="lazy" decoding="async" />
+        ) : (
+          <SamplePreview listing={listing} />
+        )
+      }
+    </div>
+    {!listing.sample && <span class="visually-hidden">Visit {listing.name} (opens in a new tab)</span>}
+  </Tag>
+  <div class="meta">
+    <div class="intro">
+      <div class="title-row">
+        <h3>{listing.name}</h3>
+        {listing.sample && <span class="tag">Sample</span>}
+        {
+          !listing.sample && (
+            <a class="visit" href={listing.url} target="_blank" rel="noopener" aria-label={`Visit ${listing.name} (opens in a new tab)`}>
+              Visit site
+              <Icon name="arrow-up-right" size={15} />
+            </a>
+          )
+        }
+      </div>
+      <p class="type">{listing.type}</p>
+      {listing.scope && <p class="scope">{listing.scope}</p>}
+    </div>
+
+    <dl class="spec">
+      <div>
+        <dt>Platform</dt>
+        <dd>
+          <Icon set="brand" name={brandIcon[listing.platform]} size={14} />
+          {listing.stack ? `${listing.platform} · ${listing.stack}` : listing.platform}
+        </dd>
+      </div>
+      <div>
+        <dt>Role</dt>
+        <dd>{listing.role}</dd>
+      </div>
+      <div>
+        <dt>Work</dt>
+        <dd class:list={['via', { agency: listing.via === 'Agency' }]}>{listing.via === 'Agency' ? 'Via agency' : 'Freelance'}</dd>
+      </div>
+    </dl>
+  </div></article>
+
+<style>
+  .work {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .frame {
+    position: relative;
+    display: block;
+    border-radius: var(--radius);
+    padding: 6px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    transition: border-color 300ms var(--ease-out);
+  }
+
+  .work:hover .frame,
+  .frame:focus-visible {
+    border-color: var(--line-strong);
+  }
+
+  .shot {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--g);
+  }
+
+
+  .shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 1400ms var(--ease-out);
+  }
+
+  /* the preview leans in slightly on hover */
+  .shot :global(.preview) {
+    transition: transform 1200ms var(--ease-out);
+    transform-origin: 50% 0;
+  }
+
+  .work:hover .shot :global(.preview),
+  .work:hover .shot img {
+    transform: scale(1.025);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work:hover .shot :global(.preview),
+    .work:hover .shot img {
+      transform: none;
+    }
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    border: 1px solid var(--line-strong);
+    padding: 0.05rem 0.5rem;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* name + link, then type, then one line of scope */
+  .meta {
+    display: grid;
+    gap: 1rem;
+    padding-inline: 0.25rem;
+  }
+
+  .intro {
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .large h3 {
+    font-size: clamp(1.4rem, 2vw, 1.7rem);
+  }
+
+  .visit {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-faint);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 200ms var(--ease-out);
+  }
+
+  .visit :global(.icon) {
+    transition: translate 300ms var(--ease-out);
+  }
+
+  .work:hover .visit,
+  .visit:focus-visible {
+    color: var(--accent);
+  }
+
+  .work:hover .visit :global(.icon) {
+    translate: 2px -2px;
+  }
+
+  .type {
+    color: var(--text-faint);
+    font-size: 0.92rem;
+  }
+
+  .scope {
+    color: var(--text-soft);
+    max-width: 56ch;
+    margin-top: 0.35rem;
+    font-size: 0.96rem;
+  }
+
+  /* three facts in a hairline row: platform, role, freelance or agency */
+  .spec {
+    margin: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.1fr) minmax(0, 0.75fr);
+    border-top: 1px solid var(--line);
+  }
+
+  .spec div {
+    padding: 0.75rem 0.9rem 0.1rem 0;
+    display: grid;
+    gap: 0.2rem;
+    align-content: start;
+  }
+
+  .spec div + div {
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .spec dt {
+    font-size: 0.78rem;
+    color: var(--text-faint);
+  }
+
+  .spec dd {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .spec dd :global(.icon) {
+    flex: none;
+    color: var(--text-faint);
+  }
+
+  .via::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+
+  .via.agency::before {
+    background: transparent;
+    border: 1px solid var(--text-faint);
+  }
+
+  /* lead card: copy on the left half, facts on the right half */
+  .large .meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 4rem;
+    align-items: start;
+  }
+
+  .large .scope {
+    font-size: 1rem;
+  }
+
+  .large .spec {
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    grid-template-columns: 1fr;
+  }
+
+  .large .spec div {
+    padding: 0.55rem 0 0.55rem 1.25rem;
+    grid-template-columns: 7rem 1fr;
+    align-items: center;
+  }
+
+  .large .spec div + div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 720px) {
+    .large .meta {
+      grid-template-columns: 1fr;
+    }
+
+    .large .spec {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .large .spec div {
+      padding-left: 0;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .spec {
+      grid-template-columns: 1fr;
+    }
+
+    .spec div + div {
+      padding-left: 0;
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .spec div {
+      grid-template-columns: 6rem 1fr;
+      align-items: center;
+      padding-block: 0.55rem;
+    }
+  }
+</style>

@@ -1,0 +1,205 @@
+---
+// Custom cursor: a mint dot, a trailing ring that reacts to what it's over,
+// and a faint glow. Mouse/trackpad only; touch devices keep the default.
+---
+
+<div class="cursor" aria-hidden="true" data-cursor-root>
+  <div class="cursor-glow" data-cursor-glow></div>
+  <div class="cursor-ring" data-cursor-ring><span data-cursor-label></span></div>
+  <div class="cursor-dot" data-cursor-dot></div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-cursor-root]');
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (root && fine) {
+    const dot = root.querySelector<HTMLElement>('[data-cursor-dot]')!;
+    const ring = root.querySelector<HTMLElement>('[data-cursor-ring]')!;
+    const glow = root.querySelector<HTMLElement>('[data-cursor-glow]')!;
+    const label = root.querySelector<HTMLElement>('[data-cursor-label]')!;
+    document.documentElement.classList.add('has-cursor');
+
+    let x = -100;
+    let y = -100;
+    let rx = x;
+    let ry = y;
+    let gx = x;
+    let gy = y;
+    const ringEase = calm ? 1 : 0.2;
+    const glowEase = calm ? 1 : 0.08;
+
+    const interactive = 'a, button, summary, label, [role="button"]';
+    const textField = 'input:not([type="radio"]):not([type="checkbox"]), textarea, select';
+
+    window.addEventListener('pointermove', (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      root.classList.add('on');
+
+      const target = e.target as Element;
+      const frame = target.closest('.work-slot');
+      const overText = !!target.closest(textField);
+      const overLink = !!target.closest(interactive);
+
+      root.classList.toggle('text', overText);
+      root.classList.toggle('link', overLink && !frame && !overText);
+      root.classList.toggle('view', !!frame);
+      if (frame) {
+        label.textContent = frame.querySelector('a.frame') ? 'Visit' : 'Sample';
+      }
+    });
+
+    document.addEventListener('pointerleave', () => root.classList.remove('on'));
+    window.addEventListener('pointerdown', () => root.classList.add('down'));
+    window.addEventListener('pointerup', () => root.classList.remove('down'));
+
+    const tick = () => {
+      rx += (x - rx) * ringEase;
+      ry += (y - ry) * ringEase;
+      gx += (x - gx) * glowEase;
+      gy += (y - gy) * glowEase;
+      dot.style.translate = `${x}px ${y}px`;
+      ring.style.translate = `${rx}px ${ry}px`;
+      glow.style.translate = `${gx}px ${gy}px`;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+</script>
+
+<style is:global>
+  .has-cursor,
+  .has-cursor a,
+  .has-cursor button,
+  .has-cursor summary,
+  .has-cursor label,
+  .has-cursor input[type='radio'] {
+    cursor: none;
+  }
+</style>
+
+<style>
+  .cursor {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out);
+  }
+
+  .cursor.on {
+    opacity: 1;
+  }
+
+  .cursor-dot,
+  .cursor-ring,
+  .cursor-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    will-change: translate;
+  }
+
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(61, 220, 151, 0.8);
+    transition:
+      scale 200ms var(--ease-out),
+      opacity 200ms var(--ease-out);
+  }
+
+  .cursor-ring {
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1px solid rgba(236, 238, 241, 0.45);
+    display: grid;
+    place-items: center;
+    transition:
+      width 350ms var(--ease-out),
+      height 350ms var(--ease-out),
+      margin 350ms var(--ease-out),
+      border-color 300ms var(--ease-out),
+      background-color 300ms var(--ease-out),
+      scale 200ms var(--ease-out),
+      opacity 200ms var(--ease-out);
+  }
+
+  .cursor-ring span {
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+    color: var(--accent-ink);
+    opacity: 0;
+    scale: 0.6;
+    transition:
+      opacity 250ms var(--ease-out),
+      scale 350ms var(--ease-out);
+  }
+
+  .cursor-glow {
+    width: 420px;
+    height: 420px;
+    margin: -210px 0 0 -210px;
+    background: radial-gradient(closest-side, rgba(61, 220, 151, 0.07), rgba(88, 120, 255, 0.04) 55%, transparent);
+  }
+
+  /* over links and buttons: ring swells and fills with mint */
+  .link .cursor-ring {
+    width: 56px;
+    height: 56px;
+    margin: -28px 0 0 -28px;
+    border-color: rgba(61, 220, 151, 0.8);
+    background: rgba(61, 220, 151, 0.1);
+  }
+
+  .link .cursor-dot {
+    scale: 0.5;
+  }
+
+  /* over work frames: solid mint disc with a label */
+  .view .cursor-ring {
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    border-color: transparent;
+    background: var(--accent);
+    box-shadow: 0 10px 40px -8px rgba(61, 220, 151, 0.6);
+  }
+
+  .view .cursor-ring span {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .view .cursor-dot {
+    opacity: 0;
+  }
+
+  /* over text fields: get out of the way of the native caret cursor */
+  .text .cursor-ring,
+  .text .cursor-dot {
+    opacity: 0;
+  }
+
+  .down .cursor-ring {
+    scale: 0.85;
+  }
+
+  .down .cursor-dot {
+    scale: 1.6;
+  }
+
+  @media (pointer: coarse) {
+    .cursor {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,2247 @@
+---
+import Base from '../layouts/Base.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Icon from '../components/Icon.astro';
+import BlocksGraphic from '../components/graphics/BlocksGraphic.astro';
+import CheckoutGraphic from '../components/graphics/CheckoutGraphic.astro';
+import ChatGraphic from '../components/graphics/ChatGraphic.astro';
+import Logo from '../components/Logo.astro';
+import SamplePreview from '../components/SamplePreview.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { existsSync } from 'node:fs';
+import { about, approach, faqs } from '../data/about';
+import { careSites, listings, moreProjects } from '../data/listings';
+import { site } from '../data/site';
+
+const [lead, ...rest] = listings;
+const hasPhoto = existsSync(new URL(`../../public${about.photo}`, import.meta.url));
+const stack = listings.slice(0, 3);
+const headline = 'WordPress and Shopify sites, built properly.';
+const hasSamples = listings.some((l) => l.sample);
+
+// Each marquee half repeats the list so it stays wider than very wide screens.
+const marqueeItems = ['WordPress', 'WooCommerce', 'Shopify', 'Custom themes', 'Rebuilds & migrations', 'Speed work', 'Ongoing care'];
+
+const platforms = [
+  {
+    name: 'WordPress',
+    brand: 'wordpress',
+    lede: 'Sites you can run yourself after launch.',
+    items: [
+      'Custom themes built from your design or mine',
+      'WooCommerce shops added to existing sites',
+      'Block editor set up so you can edit pages',
+      'Moves off old themes and page builders',
+    ],
+  },
+  {
+    name: 'Shopify',
+    brand: 'shopify',
+    lede: 'Stores set up to sell from day one.',
+    items: [
+      'Theme set-up, customisation or a custom build',
+      'Products, collections, payments and shipping',
+      'Apps chosen and configured, not piled on',
+      'Store redesigns and speed work',
+    ],
+  },
+];
+
+const steps = [
+  { title: 'Tell me what you need', detail: 'Send the form with a rough idea of the project.' },
+  { title: 'We talk it through', detail: 'A short call or a few emails about scope and timing.' },
+  { title: 'Quote, then build', detail: 'You get a quote for the work. Once you agree, I build it and keep you updated.' },
+];
+---
+
+<Base
+  title={`${site.name} | WordPress & Shopify Developer`}
+  description="Freelance web developer building WordPress sites and Shopify stores for businesses worldwide."
+>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="/" aria-label={`${site.name}, home`}>
+        <Logo />
+      </a>
+      <nav aria-label="Main">
+        <ul>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary top-cta" href="#contact">Start a project</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="spine" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <section class="hero">
+      <div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+      <div class="hero-grid grid-squares" aria-hidden="true"></div>
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <h1 class="headline">
+            {
+              headline.split(' ').map((word, i) => (
+                <>
+                  <span class="word-mask">
+                    <span class="word" style={`--w:${i}`}>{word}</span>
+                  </span>{' '}
+                </>
+              ))
+            }
+          </h1>
+          <p class="lede intro" style="--d:1">
+            I'm {site.name}, a freelance developer building and fixing sites for businesses worldwide.
+          </p>
+          <div class="actions intro" style="--d:2">
+            <a class="btn btn-primary btn-lg" href="#contact">
+              Start a project
+              <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" />
+              </svg>
+            </a>
+            <a class="btn btn-ghost btn-lg" href="#work">See the work</a>
+          </div>
+        </div>
+
+        <div class="stack" aria-hidden="true" data-stack>
+          <div class="stack-glow"></div>
+          {
+            stack.map((l, i) => (
+              <div class:list={['pane', `pane-${i}`]}>
+                <div class="pane-float">
+                  <div class="pane-shot" style={`--g:${l.swatch.ground};--i:${l.swatch.ink};--a:${l.swatch.accent}`}>
+                    {l.image ? <img src={l.image} alt="" /> : <SamplePreview listing={l} />}
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="marquee" aria-label="Platforms and services">
+        <div class="marquee-track">
+          {
+            [0, 1].map((half) => (
+              <ul aria-hidden={half === 1 ? 'true' : undefined}>
+                {[0, 1, 2].flatMap((rep) =>
+                  marqueeItems.map((item) => <li aria-hidden={rep > 0 ? 'true' : undefined}>{item}</li>),
+                )}
+              </ul>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="work-section" id="work" aria-labelledby="work-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <h2 id="work-title">Selected work</h2>
+          <p class="note">{hasSamples ? 'Sample projects shown. Real client sites go here.' : 'Live sites, freelance and agency. Agency projects are marked.'}</p>
+        </div>
+        <div class="work-grid">
+          <div data-reveal class="work-slot large-slot"><WorkCard listing={lead} large /></div>
+          {rest.map((l, i) => <div data-reveal class="work-slot" style={`--d:${i % 2}`}><WorkCard listing={l} /></div>)}
+        </div>
+
+        <div class="work-extra">
+        <div class="more" data-reveal>
+          <h3 class="more-title">More projects</h3>
+          <ul class="more-list">
+            {
+              moreProjects.map((p) => (
+                <li>
+                  <a href={p.url} target="_blank" rel="noopener">
+                    <span class="more-name">
+                      {p.name}
+                      {p.via === 'Agency' && <span class="more-tag">Via agency</span>}
+                    </span>
+                    <span class="more-type">{p.type}</span>
+                    <span class="more-stack">{p.stack ? `${p.platform} · ${p.stack}` : p.platform}</span>
+                    <span class="more-role">{p.role}</span>
+                    <Icon name="arrow-up-right" size={16} class="more-arrow" />
+                    <span class="visually-hidden">(opens in a new tab)</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="care" data-reveal data-spot>
+          <div class="care-copy">
+            <span class="care-icon"><Icon name="shield-check" size={22} stroke={1.5} /></span>
+            <h3>Care and security</h3>
+            <p>
+              Routine security checks for {careSites.length} travel and property sites in the US: malware and spam
+              clean-ups, removing hidden admin access and backdoors, plugin hygiene and mobile fixes, with a backup
+              before every change.
+            </p>
+          </div>
+          <ul class="care-list" aria-label="Sites looked after">
+            {
+              careSites.map((s) => (
+                <li>
+                  <a href={s.url} target="_blank" rel="noopener">{s.name}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="services band-raised" id="services" aria-labelledby="services-title">
+      <div class="band-dots grid-dots" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <h2 id="services-title">Two platforms, done properly</h2>
+          <p class="note">New builds, rebuilds, fixes and ongoing care.</p>
+        </div>
+        <div class="platforms" data-reveal data-spot>
+          {
+            platforms.map((p) => (
+              <div class="platform">
+                {p.name === 'WordPress' ? <BlocksGraphic /> : <CheckoutGraphic />}
+                <h3 class="platform-title"><span class="brand-tile"><Icon set="brand" name={p.brand} size={20} /></span>{p.name}</h3>
+                <p class="platform-lede">{p.lede}</p>
+                <ul>
+                  {p.items.map((item) => (
+                    <li>
+                      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                        <path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+                      </svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="wrap about-inner">
+        <figure class="portrait" data-reveal data-spot>
+          <div class="portrait-frame">
+            {
+              hasPhoto ? (
+                <img src={about.photo} alt={`Portrait of ${site.name}`} width="900" height="1125" loading="lazy" />
+              ) : (
+                <div class="portrait-empty">
+                  <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                    <circle cx="12" cy="8.5" r="4" fill="none" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M4 21c1.2-4.2 4.3-6.5 8-6.5s6.8 2.3 8 6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                  <span>Your photo goes here</span>
+                </div>
+              )
+            }
+          </div>
+          <figcaption>
+            <span class="live-dot" aria-hidden="true"></span>
+            {site.name} · {site.role}
+          </figcaption>
+        </figure>
+
+        <div class="about-copy" data-reveal style="--d:1">
+          <h2 id="about-title">Hi, I'm {site.name}.</h2>
+          <div class="about-text">
+            {about.intro.map((p) => <p>{p}</p>)}
+          </div>
+          <dl class="about-facts">
+            {
+              about.facts.map((f) => (
+                <div>
+                  <dt><Icon name={f.icon} size={15} />{f.label}</dt>
+                  <dd>{f.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <ul class="toolkit" aria-label="Toolkit">
+            {
+              about.toolkit.map((t) => (
+                <li>
+                  {t.brand ? <Icon set="brand" name={t.brand} size={14} /> : <Icon name="code-xml" size={14} />}
+                  {t.name}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="approach" id="approach" aria-labelledby="approach-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <h2 id="approach-title">What working with me is like</h2>
+          <p class="note">The same way of working on every project, big or small.</p>
+        </div>
+        <ul class="approach-grid" data-spot>
+          {
+            approach.map((a, i) => (
+              <li data-reveal style={`--d:${i % 3}`}>
+                <span class="approach-icon"><Icon name={a.icon} size={22} stroke={1.5} /></span>
+                <h3>{a.title}</h3>
+                <p>{a.detail}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="faq band-raised" id="faq" aria-labelledby="faq-title">
+      <div class="band-dots grid-dots" aria-hidden="true"></div>
+      <div class="wrap faq-inner">
+        <div class="faq-head" data-reveal>
+          <h2 id="faq-title">Questions people ask</h2>
+          <p class="note">Something else on your mind? Ask it in the form below.</p>
+          <ChatGraphic />
+        </div>
+        <div class="faq-list" data-reveal style="--d:1">
+          {
+            faqs.map((f, i) => (
+              <details name="faq" open={i === 0}>
+                <summary>
+                  {f.q}
+                  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                    <path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  </svg>
+                </summary>
+                <p>{f.a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="contact-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="contact-card" data-reveal>
+          <div class="card-lights" aria-hidden="true"><i></i><i></i></div>
+
+          <div class="contact-inner">
+            <div class="contact-copy">
+              <h2 id="contact-title">
+                Let's build your <span class="mark">next site</span>.
+              </h2>
+              <p>Tell me about your project. A few lines is enough, and I'll reply by email with questions or a quote.</p>
+              <ol class="steps" id="process" aria-label="How it works">
+                {
+                  steps.map((s) => (
+                    <li>
+                      <h3>{s.title}</h3>
+                      <p>{s.detail}</p>
+                    </li>
+                  ))
+                }
+              </ol>
+            </div>
+            <div class="contact-form" data-spot>
+              <EnquiryForm />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span class="foot-brand"><Logo icon size={22} />&copy; {new Date().getFullYear()} {site.name}</span>
+      <span>WordPress &amp; Shopify development</span>
+    </div>
+  </footer>
+</Base>
+
+<script>
+  // Cursor spotlight on framed surfaces.
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('[data-spot], .work-slot').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        el.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+  }
+
+  // Hero window stack shifts in depth with the pointer.
+  const stack = document.querySelector<HTMLElement>('[data-stack]');
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (stack && !calm && window.matchMedia('(pointer: fine)').matches) {
+    let frame = 0;
+    let px = 0;
+    let py = 0;
+    window.addEventListener('pointermove', (e) => {
+      px = e.clientX / window.innerWidth - 0.5;
+      py = e.clientY / window.innerHeight - 0.5;
+      if (!frame) {
+        frame = requestAnimationFrame(() => {
+          stack.style.setProperty('--px', px.toFixed(3));
+          stack.style.setProperty('--py', py.toFixed(3));
+          frame = 0;
+        });
+      }
+    });
+  }
+</script>
+
+<style>
+  /* Shape language: 10px for frames and panels, 6-8px for controls and tags.
+     Band rule: raised bands get a glowing hairline on top, every other band a
+     plain hairline. One grid spine (edge rails + centre line) runs the page. */
+
+  @property --spin {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  /* ---------- top bar ---------- */
+  .top {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 11, 13, 0.86);
+    backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .top-inner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 4rem;
+  }
+
+  .brand {
+    text-decoration: none;
+  }
+
+  nav {
+    margin-left: auto;
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.75rem;
+  }
+
+  nav a {
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 160ms var(--ease-out);
+  }
+
+  nav a:hover {
+    color: var(--text);
+  }
+
+  .top-cta {
+    padding: 0.6rem 1.1rem;
+    font-size: 0.94rem;
+  }
+
+  /* ---------- page spine and layering ---------- */
+  main {
+    position: relative;
+  }
+
+  main .wrap {
+    position: relative;
+    z-index: 2;
+  }
+
+  .spine {
+    position: absolute;
+    inset: 0;
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .spine span {
+    position: relative;
+    width: 1px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, transparent, var(--line) 1.5%, var(--line) 98.5%, transparent);
+  }
+
+  /* light beams travelling the full length of the spine */
+  .spine span::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 1px;
+    height: 220px;
+    top: -220px;
+    background: linear-gradient(to bottom, transparent, rgba(61, 220, 151, 0.85), transparent);
+    animation: beam 16s linear 1s infinite;
+  }
+
+  .spine span:nth-child(2)::after {
+    background: linear-gradient(to bottom, transparent, rgba(140, 165, 255, 0.75), transparent);
+    animation-duration: 20s;
+    animation-delay: 6s;
+  }
+
+  .spine span:nth-child(3)::after {
+    animation-duration: 24s;
+    animation-delay: 11s;
+  }
+
+  @keyframes beam {
+    to {
+      top: 100%;
+    }
+  }
+
+  /* ---------- bands ---------- */
+  main > section {
+    position: relative;
+    border-top: 1px solid var(--line);
+  }
+
+  main > section.hero {
+    border-top: 0;
+  }
+
+  .band-raised {
+    background: var(--bg-raise);
+  }
+
+  .band-raised::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    width: min(70%, 56rem);
+    height: 1px;
+    translate: -50% 0;
+    background: linear-gradient(to right, transparent, rgba(61, 220, 151, 0.7), rgba(140, 165, 255, 0.6), transparent);
+    box-shadow: 0 0 18px 1px rgba(61, 220, 151, 0.35);
+    z-index: 3;
+  }
+
+  .band-dots {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent);
+  }
+
+  .work-section,
+  .services,
+  .about,
+  .approach,
+  .faq,
+  .contact {
+    padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  }
+
+  /* ---------- shared section heads ---------- */
+  /* heading with its note underneath, both inside the left half */
+  .section-head {
+    display: grid;
+    justify-items: start;
+    gap: 0.9rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  /* headings stay left of the centre line */
+  .section-head h2 {
+    max-width: calc(50% - 2rem);
+  }
+
+  .section-head h2,
+  .faq-head h2,
+  .about-copy h2 {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+  }
+
+  .note {
+    color: var(--text-faint);
+    max-width: 40ch;
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding-top: clamp(3.5rem, 8vw, 6.5rem);
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 5.4vw, 4.9rem);
+    font-weight: 650;
+    letter-spacing: -0.038em;
+    line-height: 1;
+    max-width: 14ch;
+  }
+
+  .lede {
+    text-wrap: pretty;
+    font-size: clamp(1.08rem, 1.4vw, 1.25rem);
+    color: var(--text-soft);
+    max-width: 42ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .aurora {
+    position: absolute;
+    inset: -20% -10% auto;
+    height: 120%;
+    pointer-events: none;
+    filter: blur(70px);
+  }
+
+  .aurora i {
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .aurora .a1 {
+    width: 46vw;
+    height: 30vw;
+    right: 4%;
+    top: 6%;
+    background: radial-gradient(closest-side, rgba(61, 220, 151, 0.2), transparent);
+    animation: drift-a 18s ease-in-out infinite alternate;
+  }
+
+  .aurora .a2 {
+    width: 40vw;
+    height: 34vw;
+    right: 26%;
+    top: 22%;
+    background: radial-gradient(closest-side, rgba(88, 120, 255, 0.18), transparent);
+    animation: drift-b 22s ease-in-out infinite alternate;
+  }
+
+  .aurora .a3 {
+    width: 30vw;
+    height: 22vw;
+    left: -6%;
+    top: 0;
+    background: radial-gradient(closest-side, rgba(150, 170, 210, 0.1), transparent);
+    animation: drift-a 26s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes drift-a {
+    to {
+      translate: -6vw 4vw;
+      scale: 1.15;
+    }
+  }
+
+  @keyframes drift-b {
+    to {
+      translate: 8vw -3vw;
+      scale: 0.9;
+    }
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 35%, #000 10%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 70% 35%, #000 10%, transparent 75%);
+  }
+
+  .intro {
+    animation: rise 1000ms var(--ease-out) both;
+    animation-delay: calc(var(--d, 0) * 110ms);
+  }
+
+  /* window stack */
+  .stack {
+    --px: 0;
+    --py: 0;
+    position: relative;
+    aspect-ratio: 1.15;
+    perspective: 1600px;
+  }
+
+  .stack::before {
+    content: '';
+    position: absolute;
+    width: 90%;
+    aspect-ratio: 1;
+    right: -20%;
+    top: -35%;
+    background: radial-gradient(closest-side, rgba(170, 190, 225, 0.16), rgba(170, 190, 225, 0.05) 55%, transparent);
+    pointer-events: none;
+  }
+
+  .stack-glow {
+    position: absolute;
+    inset: 12% 8% 0 14%;
+    border-radius: 40%;
+    background: radial-gradient(closest-side, rgba(61, 220, 151, 0.14), rgba(88, 120, 255, 0.08) 60%, transparent);
+    filter: blur(30px);
+    animation: breathe 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes breathe {
+    to {
+      opacity: 0.55;
+      scale: 1.08;
+    }
+  }
+
+  .pane {
+    position: absolute;
+    width: 78%;
+    padding: 5px;
+    border-radius: var(--radius);
+    background: var(--bg-panel);
+    border: 1px solid var(--line-strong);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 40px 80px -30px rgba(0, 0, 0, 0.85);
+    transition: transform 900ms var(--ease-out);
+    animation: rise 1100ms var(--ease-out) both;
+  }
+
+  .pane::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.12), transparent 35%);
+  }
+
+  .pane-0 {
+    left: 0;
+    top: 26%;
+    z-index: 3;
+    transform: translate3d(calc(var(--px) * -18px), calc(var(--py) * -12px), 0);
+  }
+
+  .pane-1 {
+    right: 0;
+    top: 0;
+    z-index: 2;
+    width: 64%;
+    opacity: 0.9;
+    transform: translate3d(calc(var(--px) * 10px), calc(var(--py) * 8px), 0);
+    animation-delay: 120ms;
+  }
+
+  .pane-2 {
+    right: 4%;
+    bottom: 0;
+    z-index: 4;
+    width: 46%;
+    transform: translate3d(calc(var(--px) * -30px), calc(var(--py) * -20px), 0);
+    animation-delay: 240ms;
+  }
+
+  .pane-float {
+    animation: float 7s ease-in-out infinite alternate;
+  }
+
+  .pane-1 .pane-float {
+    animation-duration: 9s;
+    animation-delay: -3s;
+  }
+
+  .pane-2 .pane-float {
+    animation-duration: 8s;
+    animation-delay: -5s;
+  }
+
+  @keyframes float {
+    to {
+      translate: 0 -10px;
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      translate: 0 24px;
+    }
+  }
+
+  .pane-shot {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--g);
+  }
+
+  .pane-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  /* marquee */
+  .marquee {
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 120s linear infinite;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee ul {
+    list-style: none;
+    margin: 0;
+    padding: 1.4rem 3.5rem 1.4rem 0;
+    display: flex;
+    gap: 3.5rem;
+    color: var(--text-faint);
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .marquee li {
+    position: relative;
+  }
+
+  .marquee li::after {
+    content: '';
+    position: absolute;
+    right: -1.75rem;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    margin: -2px -2px 0 0;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+
+  @keyframes marquee {
+    to {
+      translate: -50% 0;
+    }
+  }
+
+  /* ---------- work ---------- */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2.5rem, 4vw, 3.5rem) clamp(1.25rem, 2.5vw, 2rem);
+  }
+
+  .large-slot {
+    grid-column: 1 / -1;
+  }
+
+  .work-slot {
+    position: relative;
+  }
+
+  .work-slot :global(.frame) {
+    transition:
+      border-color 300ms var(--ease-out),
+      box-shadow 500ms var(--ease-out);
+  }
+
+  .work-slot :global(.frame)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out);
+    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.1), transparent 60%);
+  }
+
+  .work-slot:hover :global(.frame) {
+    box-shadow:
+      0 0 0 1px rgba(61, 220, 151, 0.25),
+      0 30px 80px -40px rgba(61, 220, 151, 0.4);
+  }
+
+  .work-slot:hover :global(.frame)::after {
+    opacity: 1;
+  }
+
+  /* ---------- services ---------- */
+  .platforms {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .platform {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    background: var(--bg);
+  }
+
+  .platform + .platform {
+    border-left: 1px solid var(--line);
+  }
+
+  .platform h3 {
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  }
+
+  .platform-lede {
+    color: var(--text-soft);
+    margin-top: 0.5rem;
+  }
+
+  .platform ul {
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    display: grid;
+  }
+
+  .platform li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding-block: 0.8rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .platform li svg {
+    flex: none;
+    color: var(--text-faint);
+    translate: 0 2px;
+  }
+
+  /* ---------- about ---------- */
+  .about {
+    overflow: hidden;
+  }
+
+  .about::after {
+    content: '';
+    position: absolute;
+    width: 46rem;
+    height: 46rem;
+    left: -16rem;
+    top: -6rem;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(88, 120, 255, 0.1), rgba(61, 220, 151, 0.05) 55%, transparent);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  .about-inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .portrait {
+    margin: 0;
+    position: relative;
+    max-width: 30rem;
+    padding: 6px;
+    border-radius: var(--radius);
+    background: var(--bg-panel);
+    border: 1px solid var(--line-strong);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 50px 90px -40px rgba(0, 0, 0, 0.9),
+      0 0 80px -30px rgba(61, 220, 151, 0.25);
+  }
+
+  .portrait-frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 6px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 80% at 70% 0%, rgba(88, 120, 255, 0.16), transparent 60%),
+      var(--bg-raise);
+  }
+
+  .portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .portrait-empty {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.75rem;
+    color: var(--text-faint);
+    font-size: 0.92rem;
+  }
+
+  .portrait figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.85rem 0.6rem 0.5rem;
+    font-size: 0.92rem;
+    color: var(--text-soft);
+  }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(61, 220, 151, 0.5);
+    animation: pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    to {
+      box-shadow: 0 0 0 8px rgba(61, 220, 151, 0);
+    }
+  }
+
+  .about-copy {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .about-text {
+    display: grid;
+    gap: 1rem;
+    color: var(--text-soft);
+    font-size: 1.1rem;
+    max-width: 58ch;
+  }
+
+  .about-text p:first-child {
+    color: var(--text);
+    font-size: 1.2rem;
+  }
+
+  .about-facts {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .about-facts div {
+    padding: 1rem 1.15rem;
+    background: var(--bg);
+  }
+
+  .about-facts div:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .about-facts dt {
+    font-size: 0.85rem;
+    color: var(--text-faint);
+  }
+
+  .about-facts dd {
+    margin: 0.2rem 0 0;
+    font-weight: 600;
+  }
+
+  .toolkit {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .toolkit li {
+    font-size: 0.88rem;
+    color: var(--text-soft);
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.02);
+    transition:
+      border-color 200ms var(--ease-out),
+      color 200ms var(--ease-out);
+  }
+
+  .toolkit li:hover {
+    border-color: rgba(61, 220, 151, 0.5);
+    color: var(--text);
+  }
+
+  /* ---------- approach ---------- */
+  .approach-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .approach-grid li {
+    position: relative;
+    padding: clamp(1.5rem, 2.6vw, 2.25rem);
+    background: var(--bg);
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    transition: background-color 300ms var(--ease-out);
+  }
+
+  .approach-grid li:hover {
+    background: var(--bg-raise);
+  }
+
+  .approach-grid li::before {
+    content: '';
+    width: 28px;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(61, 220, 151, 0.5);
+    margin-bottom: 0.6rem;
+    transition: width 500ms var(--ease-out);
+  }
+
+  .approach-grid li:hover::before {
+    width: 56px;
+  }
+
+  .approach-grid h3 {
+    font-size: 1.25rem;
+  }
+
+  .approach-grid p {
+    color: var(--text-soft);
+    max-width: 38ch;
+  }
+
+  /* ---------- faq ---------- */
+  .faq-inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .faq-head {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .faq-list {
+    border-top: 1px solid var(--line-strong);
+    background: var(--bg-raise);
+  }
+
+  .faq-list details {
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .faq-list summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem 0.25rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: color 200ms var(--ease-out);
+  }
+
+  .faq-list summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-list summary:hover {
+    color: var(--accent-bright);
+  }
+
+  .faq-list summary svg {
+    flex: none;
+    color: var(--text-faint);
+    transition:
+      transform 400ms var(--ease-out),
+      color 200ms var(--ease-out);
+  }
+
+  .faq-list details[open] summary svg {
+    transform: rotate(45deg);
+    color: var(--accent);
+  }
+
+  .faq-list details p {
+    padding: 0 0.25rem 1.4rem;
+    color: var(--text-soft);
+    max-width: 62ch;
+  }
+
+  .faq-list details[open] p {
+    animation: rise 500ms var(--ease-out);
+  }
+
+  /* ---------- contact ---------- */
+  .contact {
+    overflow: hidden;
+  }
+
+  .contact-glow {
+    position: absolute;
+    width: 60rem;
+    height: 40rem;
+    right: -20rem;
+    top: 10%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(61, 220, 151, 0.1), rgba(88, 120, 255, 0.06) 55%, transparent);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  .contact-card {
+    position: relative;
+    isolation: isolate;
+    border-radius: var(--radius);
+    background:
+      radial-gradient(90% 70% at 0% 0%, rgba(61, 220, 151, 0.1), transparent 60%),
+      radial-gradient(70% 70% at 100% 100%, rgba(88, 120, 255, 0.12), transparent 60%),
+      linear-gradient(180deg, #101318, #0b0d10);
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 60px 120px -60px rgba(61, 220, 151, 0.35),
+      0 30px 80px -40px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+  }
+
+  /* rotating light running around the card edge */
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--spin),
+      transparent 0deg,
+      rgba(61, 220, 151, 0.9) 40deg,
+      rgba(140, 165, 255, 0.7) 90deg,
+      transparent 150deg,
+      transparent 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: spin 8s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  @keyframes spin {
+    to {
+      --spin: 360deg;
+    }
+  }
+
+  .card-lights i {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .card-lights i:first-child {
+    width: 30rem;
+    height: 22rem;
+    left: -8rem;
+    top: -8rem;
+    background: rgba(61, 220, 151, 0.16);
+    animation: drift-a 16s ease-in-out infinite alternate;
+  }
+
+  .card-lights i:last-child {
+    width: 28rem;
+    height: 24rem;
+    right: -10rem;
+    bottom: -10rem;
+    background: rgba(88, 120, 255, 0.18);
+    animation: drift-b 20s ease-in-out infinite alternate;
+  }
+
+  /* two halves split by one hairline, like the services panel */
+  .contact-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-copy {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  .contact-card h2 {
+    font-size: clamp(2.4rem, 5vw, 4.25rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .mark {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .mark::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.06em;
+    height: 0.1em;
+    border-radius: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 18px rgba(61, 220, 151, 0.6);
+    transform-origin: left;
+    scale: 0 1;
+    transition: scale 1100ms var(--ease-out) 300ms;
+  }
+
+  .contact-card.in .mark::after,
+  :global(html:not(.js)) .mark::after {
+    scale: 1 1;
+  }
+
+  .contact-copy > p {
+    color: var(--text-soft);
+    font-size: 1.15rem;
+    max-width: 40ch;
+  }
+
+  /* how it works: a connected track with a node per step and a beam */
+  .steps {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0 0 0 2rem;
+    position: relative;
+    display: grid;
+    gap: 1.6rem;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0.45rem;
+    bottom: 0.45rem;
+    width: 1px;
+    background: var(--line-strong);
+  }
+
+  .steps::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0.45rem;
+    width: 1px;
+    height: 70px;
+    background: linear-gradient(to bottom, transparent, rgba(61, 220, 151, 0.9), transparent);
+    animation: track 4.5s ease-in-out infinite;
+  }
+
+  @keyframes track {
+    0% {
+      top: 0;
+      opacity: 0;
+    }
+    15%,
+    85% {
+      opacity: 1;
+    }
+    100% {
+      top: calc(100% - 70px);
+      opacity: 0;
+    }
+  }
+
+  .steps li {
+    position: relative;
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .steps li::before {
+    content: '';
+    position: absolute;
+    left: calc(-2rem + 1px);
+    top: 0.35rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 0 10px rgba(61, 220, 151, 0.45);
+    /* sit above the track line and its travelling beam */
+    z-index: 2;
+  }
+
+  .steps li:first-child::before {
+    background: var(--accent);
+  }
+
+  .steps h3 {
+    font-size: 1.1rem;
+  }
+
+  .steps p {
+    color: var(--text-soft);
+    max-width: 40ch;
+  }
+
+  .contact-form {
+    position: relative;
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    border-left: 1px solid var(--line);
+    background: rgba(10, 11, 13, 0.45);
+  }
+
+  /* ---------- cursor spotlight on panels ---------- */
+  .platforms::after,
+  .approach-grid::after,
+  .portrait::after,
+  .contact-form::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out);
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(61, 220, 151, 0.08), transparent 60%);
+  }
+
+  .platforms:hover::after,
+  .approach-grid:hover::after,
+  .portrait:hover::after,
+  .contact-form:hover::after {
+    opacity: 1;
+  }
+
+  /* ---------- footer ---------- */
+  .foot {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+
+  .foot-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding-block: 1.75rem;
+    color: var(--text-faint);
+    font-size: 0.9rem;
+  }
+
+  /* ---------- more projects and care ---------- */
+  /* one solid backing so the page grid lines pass behind the list and panel */
+  .work-extra {
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(3rem, 5vw, 4rem);
+    padding-top: clamp(0.5rem, 1vw, 1rem);
+    background: var(--bg);
+    box-shadow: 0 0 0 1px var(--bg);
+  }
+
+  .more-title {
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .more-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .more-list a {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr) 16px;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0.25rem;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--text-soft);
+    background: var(--bg);
+    transition:
+      background-color 250ms var(--ease-out),
+      padding 350ms var(--ease-out);
+  }
+
+  .more-list a:hover {
+    background: var(--bg-raise);
+    padding-left: 0.85rem;
+  }
+
+  .more-name {
+    color: var(--text);
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.6rem;
+  }
+
+  .more-tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    padding: 0.05rem 0.45rem;
+  }
+
+  .more-type,
+  .more-role {
+    font-size: 0.95rem;
+  }
+
+  .more-stack {
+    font-size: 0.92rem;
+    color: var(--text-faint);
+  }
+
+  .more-list :global(.more-arrow) {
+    color: var(--text-faint);
+    transition:
+      color 250ms var(--ease-out),
+      translate 300ms var(--ease-out);
+  }
+
+  .more-list a:hover :global(.more-arrow) {
+    color: var(--accent);
+    translate: 2px -2px;
+  }
+
+  .care {
+    position: relative;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background:
+      radial-gradient(70% 90% at 0% 0%, rgba(61, 220, 151, 0.07), transparent 60%),
+      var(--bg-raise);
+  }
+
+  .care-copy {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+
+  .care-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid rgba(61, 220, 151, 0.45);
+    color: var(--accent);
+    background: rgba(61, 220, 151, 0.06);
+    margin-bottom: 0.4rem;
+  }
+
+  .care-copy h3 {
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  }
+
+  .care-copy p {
+    color: var(--text-soft);
+    max-width: 46ch;
+  }
+
+  .care-list {
+    list-style: none;
+    margin: 0;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border-left: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 1.5rem;
+    align-content: start;
+  }
+
+  .care-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: 0.94rem;
+    transition: color 200ms var(--ease-out);
+  }
+
+  .care-list a::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px rgba(61, 220, 151, 0.7);
+    flex: none;
+  }
+
+  .care-list a:hover {
+    color: var(--text);
+  }
+
+  @media (max-width: 960px) {
+    .more-list a {
+      grid-template-columns: minmax(0, 1fr) 16px;
+      gap: 0.25rem 1rem;
+    }
+
+    .more-name {
+      grid-column: 1;
+    }
+
+    .more-type,
+    .more-stack,
+    .more-role {
+      grid-column: 1;
+      font-size: 0.9rem;
+    }
+
+    .more-list :global(.more-arrow) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .care {
+      grid-template-columns: 1fr;
+    }
+
+    .care-list {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  /* ---------- iconography (Lucide for UI, Simple Icons for platforms) ---------- */
+  .platform-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .brand-tile {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-raise);
+    color: var(--text);
+    transition:
+      color 300ms var(--ease-out),
+      border-color 300ms var(--ease-out);
+  }
+
+  .platform:hover .brand-tile {
+    color: var(--accent);
+    border-color: rgba(61, 220, 151, 0.5);
+  }
+
+  .approach-icon {
+    position: absolute;
+    top: clamp(1.4rem, 2.4vw, 2rem);
+    right: clamp(1.4rem, 2.4vw, 2rem);
+    color: var(--text-faint);
+    transition:
+      color 300ms var(--ease-out),
+      translate 400ms var(--ease-out);
+  }
+
+  .approach-grid li:hover .approach-icon {
+    color: var(--accent);
+    translate: 0 -2px;
+  }
+
+  /* the icon draws itself as its cell arrives */
+  .approach-icon :global(svg > *) {
+    stroke-dasharray: 80;
+    stroke-dashoffset: 0;
+  }
+
+  :global(.js) .approach-grid li .approach-icon :global(svg > *) {
+    stroke-dashoffset: 80;
+    transition: stroke-dashoffset 1400ms var(--ease-out) calc(var(--d, 0) * 90ms + 300ms);
+  }
+
+  :global(.js) .approach-grid li.in .approach-icon :global(svg > *) {
+    stroke-dashoffset: 0;
+  }
+
+  .about-facts dt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .about-facts dt :global(.icon) {
+    color: var(--accent);
+    flex: none;
+  }
+
+  .toolkit li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .toolkit li :global(.icon) {
+    color: var(--text-faint);
+    transition: color 200ms var(--ease-out);
+  }
+
+  .toolkit li:hover :global(.icon) {
+    color: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .approach-grid li .approach-icon :global(svg > *) {
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+  }
+
+  /* ---------- motion system ----------
+     One grammar across the page: things are revealed by a mask or a line that
+     draws in, with the expo ease-out, the first time they scroll into view.
+     Content is visible by default; .js plus the reveal's .in class drive it. */
+
+  /* hero headline: words rise out of a mask, one after another */
+  .word-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  .word {
+    display: inline-block;
+    animation: word-up 1100ms var(--ease-out) both;
+    animation-delay: calc(150ms + var(--w) * 70ms);
+  }
+
+  @keyframes word-up {
+    from {
+      translate: 0 105%;
+      rotate: 4deg;
+    }
+  }
+
+  /* section headings: wipe up from their baseline */
+  :global(.js) .section-head h2,
+  :global(.js) .faq-head h2,
+  :global(.js) .about-copy h2,
+  :global(.js) .contact-card h2 {
+    clip-path: inset(0 0 100% 0);
+    translate: 0 0.35em;
+    transition:
+      clip-path 1000ms var(--ease-out) 120ms,
+      translate 1000ms var(--ease-out) 120ms;
+  }
+
+  :global(.js) .in .section-head h2,
+  :global(.js) .section-head.in h2,
+  :global(.js) .faq-head.in h2,
+  :global(.js) .about-copy.in h2,
+  :global(.js) .contact-card.in h2 {
+    clip-path: inset(0 0 -0.2em 0);
+    translate: 0 0;
+  }
+
+  /* work frames: wipe open from the bottom, then the preview drifts on scroll */
+  :global(.js) .work-slot :global(.frame) {
+    clip-path: inset(100% 0 0 0 round var(--radius));
+    transition:
+      clip-path 1200ms var(--ease-out) calc(var(--d, 0) * 90ms + 80ms),
+      border-color 300ms var(--ease-out),
+      box-shadow 500ms var(--ease-out);
+  }
+
+  :global(.js) .work-slot.in :global(.frame) {
+    clip-path: inset(0 0 0 0 round var(--radius));
+  }
+
+  @supports (animation-timeline: view()) {
+    .work-slot :global(.shot) > :global(*) {
+      animation: drift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+
+    @keyframes drift {
+      from {
+        translate: 0 3%;
+        scale: 1.04;
+      }
+      to {
+        translate: 0 -3%;
+        scale: 1.04;
+      }
+    }
+  }
+
+  /* services: checkmarks draw themselves, a light runs down the divider */
+  .platform li svg path {
+    stroke-dasharray: 16;
+    stroke-dashoffset: 0;
+  }
+
+  :global(.js) .platforms .platform li svg path {
+    stroke-dashoffset: 16;
+    transition: stroke-dashoffset 700ms var(--ease-out);
+  }
+
+  :global(.js) .platforms.in .platform li svg path {
+    stroke-dashoffset: 0;
+  }
+
+  .platform li:nth-child(1) svg path { transition-delay: 300ms; }
+  .platform li:nth-child(2) svg path { transition-delay: 420ms; }
+  .platform li:nth-child(3) svg path { transition-delay: 540ms; }
+  .platform li:nth-child(4) svg path { transition-delay: 660ms; }
+
+  .platform + .platform {
+    position: relative;
+  }
+
+  .platform + .platform::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    width: 1px;
+    height: 140px;
+    background: linear-gradient(to bottom, transparent, rgba(61, 220, 151, 0.9), transparent);
+    opacity: 0;
+  }
+
+  .platforms.in .platform + .platform::before {
+    animation: divider-run 2200ms var(--ease-out) 400ms both;
+  }
+
+  @keyframes divider-run {
+    0% {
+      top: -140px;
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  /* about: a scan line passes over the portrait, tools step in */
+  .portrait-frame::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30%;
+    top: -30%;
+    background: linear-gradient(to bottom, transparent, rgba(61, 220, 151, 0.14) 80%, rgba(61, 220, 151, 0.6) 99%, transparent);
+    pointer-events: none;
+  }
+
+  .portrait.in .portrait-frame::after {
+    animation: scan 2400ms var(--ease-out) 300ms both;
+  }
+
+  @keyframes scan {
+    0% {
+      top: -30%;
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  :global(.js) .toolkit li {
+    opacity: 0;
+    translate: 0 8px;
+  }
+
+  :global(.js) .about-copy.in .toolkit li {
+    animation: tag-in 600ms var(--ease-out) both;
+  }
+
+  .toolkit li:nth-child(1) { animation-delay: 500ms; }
+  .toolkit li:nth-child(2) { animation-delay: 560ms; }
+  .toolkit li:nth-child(3) { animation-delay: 620ms; }
+  .toolkit li:nth-child(4) { animation-delay: 680ms; }
+  .toolkit li:nth-child(5) { animation-delay: 740ms; }
+  .toolkit li:nth-child(6) { animation-delay: 800ms; }
+  .toolkit li:nth-child(7) { animation-delay: 860ms; }
+  .toolkit li:nth-child(8) { animation-delay: 920ms; }
+  .toolkit li:nth-child(9) { animation-delay: 980ms; }
+  .toolkit li:nth-child(10) { animation-delay: 1040ms; }
+
+  @keyframes tag-in {
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  /* approach: each cell's mint rule draws in as the cell arrives */
+  :global(.js) .approach-grid li::before {
+    width: 0;
+    transition: width 800ms var(--ease-out) calc(var(--d, 0) * 90ms + 350ms);
+  }
+
+  :global(.js) .approach-grid li.in::before {
+    width: 28px;
+  }
+
+  :global(.js) .approach-grid li.in:hover::before {
+    width: 56px;
+    transition-delay: 0ms;
+  }
+
+  /* contact: each step node lights up as the beam passes it */
+  .steps li::before {
+    animation: node 4.5s ease-in-out infinite;
+  }
+
+  .steps li:nth-child(1)::before { animation-delay: 0.3s; }
+  .steps li:nth-child(2)::before { animation-delay: 1.9s; }
+  .steps li:nth-child(3)::before { animation-delay: 3.4s; }
+
+  @keyframes node {
+    0%,
+    30%,
+    100% {
+      box-shadow: 0 0 10px rgba(61, 220, 151, 0.45);
+      scale: 1;
+    }
+    12% {
+      box-shadow:
+        0 0 0 6px rgba(61, 220, 151, 0.12),
+        0 0 18px rgba(61, 220, 151, 0.9);
+      scale: 1.25;
+    }
+  }
+
+  /* reading progress: a mint line along the bottom of the top bar */
+  @supports (animation-timeline: scroll()) {
+    .top::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: linear-gradient(to right, rgba(61, 220, 151, 0.2), var(--accent));
+      box-shadow: 0 0 10px rgba(61, 220, 151, 0.6);
+      transform-origin: left;
+      animation: progress linear both;
+      animation-timeline: scroll(root);
+    }
+
+    @keyframes progress {
+      from {
+        scale: 0 1;
+      }
+      to {
+        scale: 1 1;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .word,
+    .steps li::before,
+    .portrait.in .portrait-frame::after,
+    .platforms.in .platform + .platform::before,
+    :global(.js) .about-copy.in .toolkit li,
+    .work-slot :global(.shot) > :global(*) {
+      animation: none;
+    }
+
+    :global(.js) .section-head h2,
+    :global(.js) .faq-head h2,
+    :global(.js) .about-copy h2,
+    :global(.js) .contact-card h2,
+    :global(.js) .work-slot :global(.frame) {
+      clip-path: none;
+      translate: none;
+      transition: none;
+    }
+
+    :global(.js) .platforms .platform li svg path {
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+
+    :global(.js) .toolkit li {
+      opacity: 1;
+      translate: none;
+    }
+
+    :global(.js) .approach-grid li::before {
+      width: 28px;
+      transition: none;
+    }
+
+    .faq-list details::details-content {
+      transition: none;
+    }
+
+    .top::after {
+      display: none;
+    }
+  }
+
+  /* faq: answers glide open instead of jumping */
+  .faq-list details::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 500ms var(--ease-out),
+      content-visibility 500ms allow-discrete;
+  }
+
+  .faq-list details[open]::details-content {
+    block-size: auto;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 960px) {
+    .hero-inner,
+    .about-inner,
+    .faq-inner,
+    .contact-inner {
+      grid-template-columns: 1fr;
+    }
+
+    .section-head h2 {
+      max-width: none;
+    }
+
+    .stack {
+      max-width: 40rem;
+    }
+
+    /* About: heading and intro before the photo */
+    .about-copy {
+      order: -1;
+    }
+
+    .portrait {
+      max-width: 24rem;
+    }
+
+    .contact-form {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 720px) {
+    html {
+      scroll-padding-top: 7rem;
+    }
+
+    .top-inner {
+      flex-wrap: wrap;
+      height: auto;
+      padding-block: 0.75rem 0;
+      gap: 0.75rem 1rem;
+    }
+
+    .top-cta {
+      margin-left: auto;
+    }
+
+    /* compact section menu under the brand row */
+    nav {
+      order: 3;
+      flex-basis: 100%;
+      margin: 0 calc(var(--gutter) * -1);
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-top: 1px solid var(--line);
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav ul {
+      gap: 1.5rem;
+      padding: 0.65rem var(--gutter);
+      width: max-content;
+    }
+
+    nav a {
+      font-size: 0.9rem;
+    }
+
+    /* keep only the edge rails, set outside the text */
+    .spine {
+      padding-inline: calc(var(--gutter) / 2);
+    }
+
+    .spine span:nth-child(2) {
+      visibility: hidden;
+    }
+
+    .work-grid,
+    .platforms,
+    .approach-grid,
+    .about-facts {
+      grid-template-columns: 1fr;
+    }
+
+    .platform + .platform {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora i,
+    .stack-glow,
+    .pane,
+    .pane-float,
+    .marquee-track,
+    .intro,
+    .live-dot,
+    .faq-list details[open] p,
+    .contact-card::before,
+    .card-lights i,
+    .steps::after {
+      animation: none;
+    }
+
+    .pane {
+      transition: none;
+    }
+
+    .spine span::after,
+    .steps::after {
+      display: none;
+    }
+
+    .mark::after {
+      scale: 1 1;
+      transition: none;
+    }
+  }
+</style>
