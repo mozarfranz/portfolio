@@ -1,8 +1,8 @@
 // About, approach and FAQ copy. Lines marked [placeholder] need your real details.
 
 export const about = {
-  /** Put your photo at /public/about/me.jpg (portrait, at least 900px tall). */
-  photo: '/about/me.jpg',
+  /** Cut-out portrait with a transparent background (WebP with alpha). */
+  photo: '/about/me.webp',
   intro: [
     "I'm a freelance web developer who works only on WordPress and Shopify. Keeping to two platforms means I know them properly: how they're built, where they break, and how to make them fast and easy to run.",
     'You deal with me directly from the first email to launch and after. No account managers, no hand-offs to someone you have never spoken to.',
