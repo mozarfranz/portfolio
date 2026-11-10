@@ -3,6 +3,11 @@ import { site } from '../data/site';
 ---
 
 <form class="enquiry" action={site.formEndpoint} method="POST" novalidate data-enquiry>
+  <input type="hidden" name="access_key" value={site.formAccessKey} />
+  <input type="hidden" name="subject" value="New enquiry from franzmozar.com" />
+  <input type="hidden" name="from_name" value="franzmozar.com" />
+  <!-- spam trap: real people never see or tick this -->
+  <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
   <fieldset class="platform">
     <legend>Platform</legend>
     <div class="platform-options">
@@ -87,7 +92,8 @@ import { site } from '../data/site';
           body: new FormData(form),
           headers: { Accept: 'application/json' },
         });
-        if (!res.ok) throw new Error(String(res.status));
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.success === false) throw new Error(data.message || String(res.status));
         form.dataset.state = 'sent';
         form.reset();
         label.textContent = 'Enquiry sent';
@@ -107,6 +113,10 @@ import { site } from '../data/site';
   .enquiry {
     display: grid;
     gap: 1.1rem;
+  }
+
+  .botcheck {
+    display: none;
   }
 
   .platform {
