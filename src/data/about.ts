@@ -1,4 +1,4 @@
-// About, approach and FAQ copy. Lines marked [placeholder] need your real details.
+// About, approach and FAQ copy.
 
 export const about = {
   /** Cut-out portrait with a transparent background (WebP with alpha). */
@@ -9,9 +9,9 @@ export const about = {
     "I build sites as part of an agency team and take on my own freelance clients, so I'm used to working from a design, a deadline and a round of feedback, and to looking after sites long after launch.",
   ],
   facts: [
-    { label: 'Based in', value: '[placeholder] Your city', icon: 'map-pin' },
+    { label: 'Based in', value: 'Philippines', icon: 'map-pin' },
     { label: 'Works with', value: 'Businesses worldwide, remotely', icon: 'globe' },
-    { label: 'Experience', value: '[placeholder] Years building sites', icon: 'briefcase-business' },
+    { label: 'Experience', value: '3 years building sites', icon: 'briefcase-business' },
   ],
   /** brand = Simple Icons slug; tools without a brand mark show a code icon. */
   toolkit: [
